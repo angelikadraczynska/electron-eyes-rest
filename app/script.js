@@ -9,34 +9,31 @@ class App extends React.Component {
   };
 
   handleStart(newStatus) {
-    this.setState({ status: newStatus });
-    this.setState({ time: 1200 });
     this.setState({
+      status: newStatus,
+      time: 1200,
       timer: setInterval(this.step, 1000)
     });
   }
 
   step = () => {
     this.setState({ time: this.state.time - 1 });
-    if (this.state.time === 0){
-      if(this.state.status === 'rest') {
-        this.setState({ status: 'work' });
-        this.setState({ time: 1200 });
-      } else if (this.state.status === 'work'){
-        this.setState({ status: 'rest' });
-        this.setState({ time: 20 });
-      }
+    if (this.state.time !== 0) {
+      return;
     }
-
+    if (this.state.status === 'rest') {
+      this.setState({ status: 'work', time: 1200 });
+    } else if (this.state.status === 'work') {
+      this.setState({ status: 'rest', time: 20 });
+    }
   };
 
   handleStop() {
-    this.setState({ status: 'off' });
-    this.setState({ time: 0 });
+    this.setState({ status: 'off', time: 0 });
     clearInterval(this.state.timer);
   }
 
-  formatTime(time) {
+  formatTime() {
     let remain = this.state.time;
     let mins = Math.floor(remain / 60);
     remain -= mins * 60;
@@ -48,12 +45,12 @@ class App extends React.Component {
     if (secs < 10) {
       secs = '0' + secs;
     }
-    return (time = mins + ':' + secs);
+    return mins + ':' + secs;
   }
 
-closeApp() {
-  window.close();
-}
+  closeApp() {
+    window.close();
+  }
 
   render() {
     const { status, time } = this.state;
@@ -104,7 +101,9 @@ closeApp() {
       <div>
         <h1>Protect your eyes</h1>
         {renderStatus(status)}
-        <button className='btn btn-close' onClick={() => this.closeApp()}>X</button>
+        <button className='btn btn-close' onClick={() => this.closeApp()}>
+          X
+        </button>
       </div>
     );
   }
